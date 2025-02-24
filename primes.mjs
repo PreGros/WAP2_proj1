@@ -1,6 +1,16 @@
 const knownPrimesSet = new Set()
 const knownPrimesList = [];
 
+function checkPrime(n) {
+    let sqrtFloorN = Math.sqrt(n);
+    for (let i = 2; i <= sqrtFloorN; i++) {
+        if (n % i == 0)
+            return false;
+    }
+
+    return true;
+}
+
 export async function isPrime(n) {
     if (knownPrimesSet.has(n))  {
         return true;
@@ -40,11 +50,13 @@ export async function getPrimes(threshold) {
     let acc = maxKnownPrime ? maxKnownPrime : 0;
 
     if (maxKnownPrime > threshold)
-        return knownPrimesList.slice(0, findLowerPrimeIndex(threshold))
+        return knownPrimesList.slice(0, findLowerPrimeIndex(threshold));
 
     for (let i = acc+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in list
-        if (await isPrime(i))
-            knownPrimesList.push(i)
+        if (checkPrime(i)) {
+            knownPrimesList.push(i);
+            knownPrimesSet.add(i);
+        }
     }
 
     return knownPrimesList;
