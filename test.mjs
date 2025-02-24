@@ -18,8 +18,10 @@ import { isPrime, getPrimes } from "./primes.mjs";
 	// isPrime(7).then(result => console.log("7: ", result));
 	// isPrime(2).then(result => console.log("2: ", result));
 	/// 2: getPrimes vrací prvočísla V Promise
-	getPrimes(1000).then(primes => console.log(primes.join(", ")));
-	getPrimes(500).then(primes => console.log(primes.join(", ")));
+	getPrimes(50).then(primes => console.log(primes.join(", ")));
+	getPrimes(6).then(primes => console.log(primes.join(", ")));
+	// getPrimes(20).then(primes => console.log(primes.join(", ")));
+	// getPrimes(500).then(primes => console.log(primes.join(", ")));
 	// /// 3: generátor iterPrimes
 	// for (let prime of iterPrimes()) {
 	// 	if (prime > 1000) {

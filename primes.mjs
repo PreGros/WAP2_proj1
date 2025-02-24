@@ -1,5 +1,5 @@
 const knownPrimesSet = new Set()
-var knownPrimesList = [];
+const knownPrimesList = [];
 
 export async function isPrime(n) {
     if (knownPrimesSet.has(n))  {
@@ -36,23 +36,14 @@ function findLowerPrimeIndex(threshold) {
 }
 
 export async function getPrimes(threshold) {
-    let acc = 0;
-    let tempList = [];
     let maxKnownPrime = knownPrimesList[knownPrimesList.length - 1]
+    let acc = maxKnownPrime ? maxKnownPrime : 0;
 
-    if (knownPrimesList.length != 0) {
-        if (maxKnownPrime < threshold)
-            acc = maxKnownPrime;
-        else if (maxKnownPrime == threshold)
-            return knownPrimesList;
-        else if (maxKnownPrime > threshold) {
-            return knownPrimesList.slice(0, findLowerPrimeIndex(threshold))
-        }
-    }
+    if (maxKnownPrime > threshold)
+        return knownPrimesList.slice(0, findLowerPrimeIndex(threshold))
 
-
-    for (let i = acc; i <= threshold; i++) {
-        if (await isPrime(i)) // TODO: přidat kontrolu jestli je prvočíslo v setu
+    for (let i = acc+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in list
+        if (await isPrime(i))
             knownPrimesList.push(i)
     }
 
