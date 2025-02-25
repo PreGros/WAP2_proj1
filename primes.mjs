@@ -8,6 +8,8 @@ function checkPrime(n) {
             return false;
     }
 
+    knownPrimesSet.add(n);
+
     return true;
 }
 
@@ -49,15 +51,22 @@ export async function getPrimes(threshold) {
     let maxKnownPrime = knownPrimesList[knownPrimesList.length - 1]
     let acc = maxKnownPrime ? maxKnownPrime : 0;
 
-    if (maxKnownPrime > threshold)
+
+    if (maxKnownPrime > threshold) {
         return knownPrimesList.slice(0, findLowerPrimeIndex(threshold));
+    }
 
     for (let i = acc+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in list
-        if (checkPrime(i)) {
+        if (knownPrimesSet.has(i) || checkPrime(i)) {
             knownPrimesList.push(i);
-            knownPrimesSet.add(i);
         }
     }
 
-    return knownPrimesList;
+    let tempArray = knownPrimesList.slice(); // each call of getPrimes need to create its own copy of an array instead of global array - reason is global array was returned in its final shape
+
+    return tempArray;
 }
+
+// nejde to asi nějak vyřešit, pokud outputuji globální proměnnou, tak v asyn přístupu se vždycky vypíše nejpozději vyhodnocený stav
+// řešit by to šlo tak, že si budu pamatovat nejdelší vypočítané pole a buď si brát jen to co potřebuji, nebo překopírovávat do nového pole ktere potom vyprintuji a upravim globalni
+// pry to jde ještě přes map
