@@ -2,6 +2,7 @@ const knownPrimesSet = new Set();
 const knownPrimesMap = new Map();
 const maxPrimeKey = -1;
 
+// Check jestli je v 
 function checkPrime(n) {
     let sqrtFloorN = Math.sqrt(n);
     for (let i = 2; i <= sqrtFloorN; i++) {
@@ -19,15 +20,9 @@ export async function isPrime(n) {
         return true;
     }
 
-    let sqrtFloorN = Math.sqrt(n);
-    for (let i = 2; i <= sqrtFloorN; i++) {
-        if (n % i == 0)
-            return false;
-    }
-    
-    knownPrimesSet.add(n);
-    return true;
+    return checkPrime(n);
 }
+
 // Binární vyhledávání 
 function findLowerPrimeIndex(threshold, maxPrimeList) {
     let left = 0;
@@ -49,6 +44,11 @@ function findLowerPrimeIndex(threshold, maxPrimeList) {
 }
 
 export async function getPrimes(threshold) {
+    if (threshold < 1) {
+        throw new Error(`Invalid threshold '${threshold}'`);
+    }
+
+
     // In case I have already computed same threshold
     if (knownPrimesMap.has(threshold)) {
         // console.log("Already computed!");
@@ -58,6 +58,7 @@ export async function getPrimes(threshold) {
     // In case I have already computed threshold with greater number (I know prime number greater than my threshold)
     let maxPrimeVal = knownPrimesMap.has(maxPrimeKey) ? knownPrimesMap.get(maxPrimeKey) : 1;
     let maxPrimeList = (maxPrimeVal != 1) ? knownPrimesMap.get(maxPrimeVal) : [];
+    console.log(maxPrimeVal);
     if (maxPrimeVal > threshold){
         // console.log("Slicing!");
         return maxPrimeList.slice(0, findLowerPrimeIndex(threshold, maxPrimeList));
@@ -66,7 +67,7 @@ export async function getPrimes(threshold) {
     // Max known prime number is lower
     let tempArray = [...maxPrimeList]; // should be the fastest way since ECMA2015 of copying an array to an array
     let maxFoundPrime = 0;
-    for (let i = maxPrimeVal+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in map
+    for (let i = maxPrimeVal+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in map (also start from 1+1)
         if (knownPrimesSet.has(i) || checkPrime(i)) {
             tempArray.push(i);
             maxFoundPrime = i;
@@ -75,8 +76,10 @@ export async function getPrimes(threshold) {
 
     knownPrimesMap.set(maxPrimeKey, maxFoundPrime);
 
-    // Add new array up to given threshold
-    knownPrimesMap.set(threshold, tempArray);
+    // Adding reference to all key values from max prime number up to threshold (threshold=100, maxFoundPrime=97, keys 97,98,99,100 will get the reference)
+    for (let i = maxFoundPrime; i <= threshold; i++) {
+        knownPrimesMap.set(i, tempArray);
+    }
 
     return tempArray;
 }
