@@ -1,5 +1,6 @@
-const knownPrimesSet = new Set()
-const knownPrimesList = [];
+const knownPrimesSet = new Set();
+const knownPrimesMap = new Map();
+const maxPrimeKey = -1;
 
 function checkPrime(n) {
     let sqrtFloorN = Math.sqrt(n);
@@ -28,16 +29,16 @@ export async function isPrime(n) {
     return true;
 }
 // Binární vyhledávání 
-function findLowerPrimeIndex(threshold) {
+function findLowerPrimeIndex(threshold, maxPrimeList) {
     let left = 0;
-    let right = knownPrimesList.length - 1;
+    let right = maxPrimeList.length - 1;
 
     while (left <= right) {
         let middle = Math.floor((left + right) / 2);
 
-        if (knownPrimesList[middle] === threshold) {
+        if (maxPrimeList[middle] === threshold) {
             return middle;
-        } else if (knownPrimesList[middle] < threshold) {
+        } else if (maxPrimeList[middle] < threshold) {
             left = middle + 1;
         } else {
             right = middle - 1;
@@ -48,25 +49,34 @@ function findLowerPrimeIndex(threshold) {
 }
 
 export async function getPrimes(threshold) {
-    let maxKnownPrime = knownPrimesList[knownPrimesList.length - 1]
-    let acc = maxKnownPrime ? maxKnownPrime : 0;
-
-
-    if (maxKnownPrime > threshold) {
-        return knownPrimesList.slice(0, findLowerPrimeIndex(threshold));
+    // In case I have already computed same threshold
+    if (knownPrimesMap.has(threshold)) {
+        // console.log("Already computed!");
+        return knownPrimesMap.get(threshold);    
     }
 
-    for (let i = acc+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in list
+    // In case I have already computed threshold with greater number (I know prime number greater than my threshold)
+    let maxPrimeVal = knownPrimesMap.has(maxPrimeKey) ? knownPrimesMap.get(maxPrimeKey) : 1;
+    let maxPrimeList = (maxPrimeVal != 1) ? knownPrimesMap.get(maxPrimeVal) : [];
+    if (maxPrimeVal > threshold){
+        // console.log("Slicing!");
+        return maxPrimeList.slice(0, findLowerPrimeIndex(threshold, maxPrimeList));
+    }
+
+    // Max known prime number is lower
+    let tempArray = [...maxPrimeList]; // should be the fastest way since ECMA2015 of copying an array to an array
+    let maxFoundPrime = 0;
+    for (let i = maxPrimeVal+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in map
         if (knownPrimesSet.has(i) || checkPrime(i)) {
-            knownPrimesList.push(i);
+            tempArray.push(i);
+            maxFoundPrime = i;
         }
     }
 
-    let tempArray = knownPrimesList.slice(); // each call of getPrimes need to create its own copy of an array instead of global array - reason is global array was returned in its final shape
+    knownPrimesMap.set(maxPrimeKey, maxFoundPrime);
+
+    // Add new array up to given threshold
+    knownPrimesMap.set(threshold, tempArray);
 
     return tempArray;
 }
-
-// nejde to asi nějak vyřešit, pokud outputuji globální proměnnou, tak v asyn přístupu se vždycky vypíše nejpozději vyhodnocený stav
-// řešit by to šlo tak, že si budu pamatovat nejdelší vypočítané pole a buď si brát jen to co potřebuji, nebo překopírovávat do nového pole ktere potom vyprintuji a upravim globalni
-// pry to jde ještě přes map
