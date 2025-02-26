@@ -1,3 +1,4 @@
+'use strict'
 const knownPrimesSet = new Set();
 const knownPrimesMap = new Map();
 const maxPrimeKey = -1;
@@ -81,7 +82,7 @@ export async function getPrimes(threshold) {
     return tempArray;
 }
 
-export async function iterPrimes() {
+export function* iterPrimes() {
     let acc = 2;
     while (true) {
         if (knownPrimesSet.has(acc) || checkPrime(acc)) {
