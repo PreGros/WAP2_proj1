@@ -22,10 +22,10 @@ import { isPrime, getPrimes } from "./primes.mjs";
 	getPrimes(11).then(primes => console.log(primes.join(", ")));
 	getPrimes(1009).then(primes => console.log(primes.join(", ")));
 	getPrimes(97).then(primes => console.log(primes.join(", ")));
-	getPrimes(0).then(primes => console.log(primes.join(", ")));
+	getPrimes(19).then(primes => console.log(primes.join(", ")));
 	// getPrimes(1000).then(primes => console.log(primes.join(", ")));
 	// getPrimes(1000).then(primes => console.log(primes.join(", ")));
-	/// 3: generátor iterPrimes
+	// 3: generátor iterPrimes
 	// for (let prime of iterPrimes()) {
 	// 	if (prime > 1000) {
 	// 		console.log("1009:", prime === 1009);

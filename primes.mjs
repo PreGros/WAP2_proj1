@@ -44,9 +44,9 @@ function findLowerPrimeIndex(threshold, maxPrimeList) {
 }
 
 export async function getPrimes(threshold) {
-    // if (threshold < 1) {
-    //     throw new Error(`Invalid threshold '${threshold}'`);
-    // }
+    if (threshold < 0) {
+        throw new Error(`Invalid threshold '${threshold}'`);
+    }
 
     // In case I have already computed same threshold
     if (knownPrimesMap.has(threshold)) {
@@ -79,4 +79,14 @@ export async function getPrimes(threshold) {
     }
 
     return tempArray;
+}
+
+export async function iterPrimes() {
+    let acc = 2;
+    while (true) {
+        if (knownPrimesSet.has(acc) || checkPrime(acc)) {
+            yield acc;
+        }
+        acc++;
+    }
 }
