@@ -5,6 +5,9 @@ const maxPrimeKey = -1;
 
 // Check jestli je v 
 function checkPrime(n) {
+    if (n <= 1)
+        return false;
+
     let sqrtFloorN = Math.sqrt(n);
     for (let i = 2; i <= sqrtFloorN; i++) {
         if (n % i == 0)
@@ -63,7 +66,7 @@ export async function getPrimes(threshold) {
 
     // Max known prime number is lower
     let tempArray = [...maxPrimeList]; // should be the fastest way since ECMA2015 of copying an array to an array
-    let maxFoundPrime = 0;
+    let maxFoundPrime = 1;
     for (let i = maxPrimeVal+1; i <= threshold; i++) { // plus one to find a number greater then max known prime in map (also start from 1+1)
         if (knownPrimesSet.has(i) || checkPrime(i)) { // quick eval if already save in knownPrimeSet
             tempArray.push(i);
