@@ -9,6 +9,9 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 CLEAR='\033[0m'
 
+mkdir -p $OUTPUT_FILES
+mkdir -p $ERROR_FILES
+
 for script in "$TEST_FILES"/*.mjs; do
     script_name=$(basename "$script" .mjs)
 
