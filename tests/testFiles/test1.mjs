@@ -1,6 +1,10 @@
 'use strict'
 import { isPrime, getPrimes, iterPrimes } from "../../primes.mjs";
 
+/**
+ * Spouští testy na funkce isPrime a getPrimes.
+ * @returns {Promise<void>}
+ */
 (async function()
 {
 	isPrime(2).then(result => console.log("2: ", result));

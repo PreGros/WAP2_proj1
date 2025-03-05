@@ -9,6 +9,24 @@ GREEN='\033[0;32m'
 RED='\033[0;31m'
 CLEAR='\033[0m'
 
+INSTALL_NODE=false
+
+if [[ "$1" == "-install" ]]; then
+    INSTALL_NODE=true
+fi
+
+if ! command -v node &> /dev/null; then
+    if [ "$INSTALL_NODE" = true ]; then
+        echo "Node.js not found. Installing Node.js 16.20.2..."
+        curl -fsSL https://deb.nodesource.com/setup_16.x | sudo -E bash -
+        sudo apt-get install -y nodejs=16.20.2-1nodesource1
+    else
+        echo "Node.js is not installed or version differs. Run the script with -install parameter to install Node.js 16.20.2."
+    fi
+fi
+
+
+
 mkdir -p $OUTPUT_FILES
 mkdir -p $ERROR_FILES
 

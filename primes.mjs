@@ -1,9 +1,28 @@
 'use strict'
+
+/**
+ * Set známých prvočísel
+ * @type {Set<number>}
+ */
 const knownPrimesSet = new Set();
+
+/**
+ * Mapa známých prvočísel
+ * @type {Map<number, number[]>}
+ */
 const knownPrimesMap = new Map();
+
+/** 
+ * Index největšího nalezeného prvočísla v mapě
+ * @type {number}
+ */
 const maxPrimeKey = -1;
 
-// Check jestli je v 
+/**
+ * Ověří zadané číslo zda je prvočíslem
+ * @param {number} n - Zadané číslo
+ * @returns {boolean} Vrátí True pokud je prvočíslem, False v opačeném případě
+ */
 function checkPrime(n) {
     if (n <= 1)
         return false;
@@ -19,6 +38,11 @@ function checkPrime(n) {
     return true;
 }
 
+/**
+ * Asynchronně ověřuje zda zadané číslo je prvočíslem
+ * @param {number} n - Zadané číslo
+ * @returns {Promise<boolean>} Vrací Promise, který vrací True pokud je prvočíslem, False v opačeném případě
+ */
 export async function isPrime(n) {
     if (knownPrimesSet.has(n))  {
         return true;
@@ -27,7 +51,12 @@ export async function isPrime(n) {
     return checkPrime(n);
 }
 
-// Binární vyhledávání 
+/**
+ * Najde prvočíslo menší nebo rovné zadanému thresholdu
+ * @param {number} threshold - Horní hranice
+ * @param {number[]} maxPrimeList - Pole ve kterém se bude hledat
+ * @returns {number} Prvočíslo menší nebo rovné zadanému thresholdu
+ */
 function findLowerPrimeIndex(threshold, maxPrimeList) {
     let left = 0;
     let right = maxPrimeList.length - 1;
@@ -47,6 +76,12 @@ function findLowerPrimeIndex(threshold, maxPrimeList) {
     return right;
 }
 
+/**
+ * Funkce vracející všechna prvočísla do zadané threshold hodnoty
+ * @param {number} threshold - Horní hranice
+ * @returns {Promise<number[]>} Vrací Promise, který vrací pole prvočísel do threshold hodnoty
+ * @throws {Error} Pokud je threshold záporné číslo
+ */
 export async function getPrimes(threshold) {
     if (threshold < 0) {
         throw new Error(`Invalid threshold '${threshold}'`);
@@ -85,6 +120,10 @@ export async function getPrimes(threshold) {
     return tempArray;
 }
 
+/**
+ * Generátor prvočísel pamatující kde skončil
+ * @yields {number} Další prvočíslo v pořadí.
+ */
 export function* iterPrimes() {
     let acc = 2;
     while (true) {
