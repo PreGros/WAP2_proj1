@@ -1,0 +1,10 @@
+{
+    "source": {
+        "include": ["primes.mjs"],
+        "includePattern": "\\.mjs$"
+    },
+    "opts": {
+        "destination": "./docs",
+        "recurse": true
+    }
+}
